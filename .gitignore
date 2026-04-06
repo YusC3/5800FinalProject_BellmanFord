@@ -1,1 +1,22 @@
+# ── Python ────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# ── Virtual environments ───────────────────────────────────────
+.venv/
+venv/
+env/
+
+# ── Raw dataset archives (large, re-downloadable) ─────────────
+test/real_world/raw/
+
+# ── Generated results (re-runnable) ───────────────────────────
+results/
+
+# ── macOS ──────────────────────────────────────────────────────
 .DS_Store
+
+# ── IDEs ───────────────────────────────────────────────────────
+.vscode/

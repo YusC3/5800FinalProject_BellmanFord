@@ -3,7 +3,11 @@
 # ──────────────────────────────────────────────
 """
 Reads one or more Bellman-Ford-Moore test cases from a plain-text file,
-runs the algorithm on each, and writes the results to an output file.
+runs the algorithm on each, and writes the results to an output file
+inside a 'results/' folder.
+
+Output naming:  results/<input_stem>_results.txt
+                e.g. hard_test_cases.txt -> results/hard_test_cases_results.txt
 
 Input file format (blank line separates test cases)
 ────────────────────────────────────────────────────
@@ -16,6 +20,7 @@ LIST|MATRIX          <- graph representation (case-insensitive)
 """
 
 import io
+from datetime import datetime
 from pathlib import Path
 
 from bellman_ford_algorithm import bellman_ford_moore
@@ -33,21 +38,16 @@ def _parse_test_cases(lines: list[str]) -> list[dict]:
     current: list[str] = []
 
     def _flush(block: list[str]):
-        """Parse one block of non-blank lines into a test-case dict."""
         if not block:
             return
 
         it = iter(block)
 
-        # representation
         rep = next(it).strip().upper()
         if rep not in ("LIST", "MATRIX"):
-            raise ValueError(
-                f"Unknown representation '{rep}'. Expected LIST or MATRIX."
-            )
+            raise ValueError(f"Unknown representation '{rep}'. Expected LIST or MATRIX.")
         GraphClass = AdjacencyListGraph if rep == "LIST" else AdjacencyMatrixGraph
 
-        # V and E
         try:
             V = int(next(it).strip())
             E = int(next(it).strip())
@@ -59,29 +59,45 @@ def _parse_test_cases(lines: list[str]) -> list[dict]:
         if E < 0:
             raise ValueError(f"E must be >= 0, got {E}.")
 
-        # edge list
         edges: list[tuple] = []
         for i in range(E):
             try:
                 raw = next(it).strip().split()
+            except StopIteration:
+                raise ValueError(
+                    f"Unexpected end of file — declared E={E} but only "
+                    f"{i} edge(s) found. Check the edge count in your input."
+                )
+            if len(raw) != 3:
+                raise ValueError(
+                    f"Edge #{i + 1}: expected 'u v weight' (3 values) "
+                    f"but got {len(raw)} value(s): '{' '.join(raw)}'. "
+                    f"Declared E={E} may not match actual edge count."
+                )
+            try:
                 u, v, w = int(raw[0]), int(raw[1]), float(raw[2])
-            except (StopIteration, IndexError, ValueError) as exc:
-                raise ValueError(f"Bad edge on edge #{i + 1}.") from exc
+            except ValueError:
+                raise ValueError(
+                    f"Edge #{i + 1}: could not parse '{' '.join(raw)}' as "
+                    f"integers/float. Declared E={E} may not match actual edge count."
+                )
+            if u == v:
+                raise ValueError(
+                    f"Edge #{i + 1}: self-loop detected (u={u}, v={v}). "
+                    f"Bellman-Ford does not support self-loops."
+                )
             edges.append((u, v, w))
 
-        # optional source vertex
         source = 0
         try:
             source_line = next(it).strip()
             if source_line:
                 source = int(source_line)
         except StopIteration:
-            pass  # EOF — use default
+            pass
 
         if not (0 <= source < V):
-            raise ValueError(
-                f"Source vertex {source} is out of range [0, {V - 1}]."
-            )
+            raise ValueError(f"Source vertex {source} is out of range [0, {V - 1}].")
 
         test_cases.append(
             dict(GraphClass=GraphClass, rep=rep, V=V, edges=edges, source=source)
@@ -92,17 +108,16 @@ def _parse_test_cases(lines: list[str]) -> list[dict]:
         if stripped == "":
             _flush(current)
             current = []
-        elif stripped.startswith("#"):   # ← ignore comment lines
+        elif stripped.startswith("#"):
             continue
         else:
             current.append(line)
 
-    _flush(current)  # handle last test case with no trailing blank line
+    _flush(current)
     return test_cases
 
 
 def _format_path(prev: list, source: int, target: int) -> str:
-    """Reconstruct and format the shortest path from source → target."""
     path = []
     node = target
     visited = set()
@@ -122,7 +137,6 @@ def _format_path(prev: list, source: int, target: int) -> str:
 
 def _format_results(dist: list, prev: list, source: int, case_num: int,
                     rep: str, V: int, edges: list) -> str:
-    """Return a formatted result block as a string."""
     out = io.StringIO()
 
     out.write(f"{'=' * 60}\n")
@@ -133,25 +147,20 @@ def _format_results(dist: list, prev: list, source: int, case_num: int,
     out.write(f"  Source         : {source}\n")
     out.write(f"{'=' * 60}\n\n")
 
-    # Check for negative-cycle sentinel (None signals detection)
     if dist is None:
         out.write("  *** Negative-weight cycle detected — no solution. ***\n\n")
         return out.getvalue()
 
-    col_w = 10  # column width
-    out.write(
-        f"  {'Vertex':<{col_w}} {'Distance':<{col_w}} {'Path from source'}\n"
-    )
+    col_w = 10
+    out.write(f"  {'Vertex':<{col_w}} {'Distance':<{col_w}} {'Path from source'}\n")
     out.write(f"  {'-' * 50}\n")
 
     for v in range(V):
         if dist[v] == float("inf"):
-            dist_str = "∞"
-            path_str = "<unreachable>"
+            dist_str, path_str = "∞", "<unreachable>"
         else:
             dist_str = str(dist[v])
             path_str = _format_path(prev, source, v)
-
         out.write(f"  {v:<{col_w}} {dist_str:<{col_w}} {path_str}\n")
 
     out.write("\n")
@@ -160,23 +169,45 @@ def _format_results(dist: list, prev: list, source: int, case_num: int,
 
 # ── public API ────────────────────────────────────────────────────────────────
 
-def run_batch(input_path: str | Path, output_path: str | Path) -> int:
+def run_batch(input_path: str | Path) -> Path:
     """
     Read test cases from *input_path*, run Bellman-Ford-Moore on each,
-    and write formatted results to *output_path*.
+    and write results to:
+        <repo_root>/test/output/<category>/<stem>_results.txt
 
-    Returns the number of test cases processed.
+    <category> is inferred from the input path — either 'unit' or 'real_world'.
+    Output folders are created automatically if they do not exist.
+
+    Example:
+        ../test/unit/random_test_cases.txt
+        -> ../test/output/unit/random_test_cases_results.txt
+
+    Returns the output Path.
 
     Raises
     ------
-    FileNotFoundError  : if *input_path* does not exist.
-    ValueError         : if a test case is malformed.
+    FileNotFoundError : if *input_path* does not exist.
+    ValueError        : if a test case is malformed.
     """
-    input_path = Path(input_path)
-    output_path = Path(output_path)
+    input_path = Path(input_path).resolve()
 
     if not input_path.exists():
         raise FileNotFoundError(f"Input file not found: {input_path}")
+
+    # Infer category from input path parts (unit or real_world)
+    category = "unit"  # default fallback
+    for part in input_path.parts:
+        if part in ("unit", "real_world"):
+            category = part
+            break
+
+    # repo_root is one level above src/
+    src_dir    = Path(__file__).resolve().parent
+    repo_root  = src_dir.parent
+    output_dir = repo_root / "test" / "output" / category
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    output_path = output_dir / f"{input_path.stem}_results.txt"
 
     lines = input_path.read_text(encoding="utf-8").splitlines()
     test_cases = _parse_test_cases(lines)
@@ -185,30 +216,27 @@ def run_batch(input_path: str | Path, output_path: str | Path) -> int:
         raise ValueError("No test cases found in the input file.")
 
     with output_path.open("w", encoding="utf-8") as fout:
-        fout.write("Bellman-Ford-Moore — Batch Results\n")
+        # ── timestamp header ──────────────────────────────────
+        stamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        fout.write(f"Bellman-Ford-Moore — Batch Results\n")
+        fout.write(f"Generated  : {stamp}\n")
         fout.write(f"Input file : {input_path}\n")
         fout.write(f"Test cases : {len(test_cases)}\n\n")
 
         for i, tc in enumerate(test_cases, start=1):
-            # Build graph
             graph = tc["GraphClass"](tc["V"])
             for u, v, w in tc["edges"]:
                 graph.add_edge(u, v, w)
 
-            # Run algorithm
             dist, prev = bellman_ford_moore(graph, tc["source"])
 
-            # Write results
             block = _format_results(
                 dist, prev, tc["source"],
-                case_num=i,
-                rep=tc["rep"],
-                V=tc["V"],
-                edges=tc["edges"],
+                case_num=i, rep=tc["rep"], V=tc["V"], edges=tc["edges"],
             )
             fout.write(block)
 
-    return len(test_cases)
+    return output_path
 
 
 # ── CLI entry point ───────────────────────────────────────────────────────────
@@ -216,13 +244,13 @@ def run_batch(input_path: str | Path, output_path: str | Path) -> int:
 if __name__ == "__main__":
     import sys
 
-    if len(sys.argv) != 3:
-        print("Usage: python batch_runner.py <input_file> <output_file>")
+    if len(sys.argv) != 2:
+        print("Usage: python batch_runner.py <input_file>")
         sys.exit(1)
 
     try:
-        n = run_batch(sys.argv[1], sys.argv[2])
-        print(f"Done — {n} test case(s) written to '{sys.argv[2]}'.")
+        out = run_batch(sys.argv[1])
+        print(f"Done — results written to '{out}'.")
     except (FileNotFoundError, ValueError) as e:
         print(f"Error: {e}", file=sys.stderr)
         sys.exit(1)

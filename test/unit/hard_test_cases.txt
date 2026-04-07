@@ -1,0 +1,166 @@
+# =============================================================
+# CONSTRUCTED HARD INSTANCES — Bellman-Ford-Moore
+# These cases are designed to stress-test the algorithm by
+# forcing worst-case relaxation behavior, near-negative cycles,
+# long chain dependencies, and large dense graphs.
+# =============================================================
+
+# ─────────────────────────────────────────────────────────────
+# Hard Case 1 — Long relaxation chain (Adjacency List)
+# 8 vertices, 7 edges, source = 0
+# Purpose: Forces maximum number of relaxation passes.
+#   Edges are ordered WORST-FIRST (reverse of optimal order),
+#   so no edge can be finalized until the previous vertex is
+#   settled. Bellman-Ford needs V-1 = 7 full passes to converge
+#   instead of converging early. This is the classic worst-case
+#   edge ordering that defeats early-termination optimizations.
+# Expected: dist = [0, -1, -2, -3, -4, -5, -6, -7]
+# ─────────────────────────────────────────────────────────────
+LIST
+8
+7
+6 7 -1
+5 6 -1
+4 5 -1
+3 4 -1
+2 3 -1
+1 2 -1
+0 1 -1
+0
+
+# ─────────────────────────────────────────────────────────────
+# Hard Case 2 — Near-negative cycle (Adjacency List)
+# 5 vertices, 6 edges, source = 0
+# Purpose: A cycle whose total weight is exactly 0 (not negative).
+#   Cycle: 1 → 2 → 3 → 1  with weights 3 + (-2) + (-1) = 0
+#   Tests that the algorithm does NOT falsely flag a zero-weight
+#   cycle as a negative cycle — a common off-by-one bug.
+#   Also tests that shortest paths through the cycle are still
+#   computed correctly.
+# Expected: no negative cycle detected, valid distances returned
+# ─────────────────────────────────────────────────────────────
+LIST
+5
+6
+0 1 5
+1 2 3
+2 3 -2
+3 1 -1
+0 3 2
+3 4 4
+0
+
+# ─────────────────────────────────────────────────────────────
+# Hard Case 3 — Dense graph, all negative edges (Adjacency Matrix)
+# 5 vertices, 20 edges (fully connected), source = 0
+# Purpose: Maximum edge density with negative weights throughout.
+#   Every pair (u, v) where u != v has an edge with weight -(u+v+1),
+#   creating many competing paths. Forces the algorithm to evaluate
+#   every possible relaxation at every pass. Tests matrix
+#   representation under maximum load with negative weights.
+# Expected: no negative cycle (no cycles sum below zero here),
+#            very negative shortest paths
+# ─────────────────────────────────────────────────────────────
+MATRIX
+5
+20
+0 1 -2
+0 2 -3
+0 3 -4
+0 4 -5
+1 0 -2
+1 2 -4
+1 3 -5
+1 4 -6
+2 0 -3
+2 1 -4
+2 3 -6
+2 4 -7
+3 0 -4
+3 1 -5
+3 2 -6
+3 4 -8
+4 0 -5
+4 1 -6
+4 2 -7
+4 3 -8
+0
+
+# ─────────────────────────────────────────────────────────────
+# Hard Case 4 — Multiple negative cycles, only some reachable
+# (Adjacency List)
+# 7 vertices, 10 edges, source = 0
+# Purpose: Two negative cycles exist in the graph, but only one
+#   is reachable from source 0. Tests that the algorithm flags
+#   the negative cycle correctly while handling the unreachable
+#   cycle (vertices 5-6) gracefully without a false positive.
+#   This is a subtle correctness trap — naive implementations
+#   may flag both or neither.
+# Reachable negative cycle: 1 → 2 → 3 → 1  (1 + 1 + (-3) = -1)
+# Unreachable negative cycle: 5 → 6 → 5    (-2 + (-2) = -4)
+# Expected: negative cycle detected (reachable one triggers it)
+# ─────────────────────────────────────────────────────────────
+LIST
+7
+10
+0 1 2
+1 2 1
+2 3 1
+3 1 -3
+0 4 1
+4 3 5
+5 6 -2
+6 5 -2
+4 5 100
+3 4 100
+0
+
+# ─────────────────────────────────────────────────────────────
+# Hard Case 5 — Large sparse graph, worst-case edge order
+# (Adjacency Matrix)
+# 10 vertices, 9 edges (path graph), source = 0
+# Purpose: A long linear chain with edges listed in reverse order
+#   (9→8, 8→7, ... 1→0 listed as 0→1 ... but processed last).
+#   With V=10, the algorithm must perform exactly V-1=9 passes
+#   with no early termination possible. Stresses the matrix
+#   representation with a large V relative to E.
+# Expected: dist[i] = i * (-2) for each vertex i
+# ─────────────────────────────────────────────────────────────
+MATRIX
+10
+9
+8 9 -2
+7 8 -2
+6 7 -2
+5 6 -2
+4 5 -2
+3 4 -2
+2 3 -2
+1 2 -2
+0 1 -2
+0
+
+# ─────────────────────────────────────────────────────────────
+# Hard Case 6 — Negative cycle reachable only via long path
+# (Adjacency List)
+# 6 vertices, 8 edges, source = 0
+# Purpose: The negative cycle (3 → 4 → 5 → 3, sum = -1) is only
+#   reachable after traversing a 3-hop path from source (0→1→2→3).
+#   Tests whether the algorithm correctly propagates the negative
+#   cycle detection even when the cycle is "deep" in the graph.
+#   Naive implementations that stop early may miss it.
+# Negative cycle: 3 → 4 → 5 → 3  (2 + (-4) + 1 = -1)
+# Expected: negative cycle detected
+# ─────────────────────────────────────────────────────────────
+LIST
+6
+8
+0 1 5
+1 2 3
+2 3 2
+3 4 2
+4 5 -4
+5 3 1
+3 5 10
+0 5 100
+0

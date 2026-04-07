@@ -169,18 +169,12 @@ def _format_results(dist: list, prev: list, source: int, case_num: int,
 
 # ── public API ────────────────────────────────────────────────────────────────
 
-def run_batch(input_path: str | Path) -> Path:
+def run_batch(input_path: str | Path, output_path: str | Path) -> Path:
     """
     Read test cases from *input_path*, run Bellman-Ford-Moore on each,
-    and write results to:
-        <repo_root>/test/output/<category>/<stem>_results.txt
+    and write results to *output_path*.
 
-    <category> is inferred from the input path — either 'unit' or 'real_world'.
-    Output folders are created automatically if they do not exist.
-
-    Example:
-        ../test/unit/random_test_cases.txt
-        -> ../test/output/unit/random_test_cases_results.txt
+    The parent directory of output_path is created if it does not exist.
 
     Returns the output Path.
 
@@ -189,25 +183,13 @@ def run_batch(input_path: str | Path) -> Path:
     FileNotFoundError : if *input_path* does not exist.
     ValueError        : if a test case is malformed.
     """
-    input_path = Path(input_path).resolve()
+    input_path  = Path(input_path).resolve()
+    output_path = Path(output_path).resolve()
 
     if not input_path.exists():
         raise FileNotFoundError(f"Input file not found: {input_path}")
 
-    # Infer category from input path parts (unit or real_world)
-    category = "unit"  # default fallback
-    for part in input_path.parts:
-        if part in ("unit", "real_world"):
-            category = part
-            break
-
-    # repo_root is one level above src/
-    src_dir    = Path(__file__).resolve().parent
-    repo_root  = src_dir.parent
-    output_dir = repo_root / "test" / "output" / category
-    output_dir.mkdir(parents=True, exist_ok=True)
-
-    output_path = output_dir / f"{input_path.stem}_results.txt"
+    output_path.parent.mkdir(parents=True, exist_ok=True)
 
     lines = input_path.read_text(encoding="utf-8").splitlines()
     test_cases = _parse_test_cases(lines)
@@ -244,12 +226,12 @@ def run_batch(input_path: str | Path) -> Path:
 if __name__ == "__main__":
     import sys
 
-    if len(sys.argv) != 2:
-        print("Usage: python batch_runner.py <input_file>")
+    if len(sys.argv) != 3:
+        print("Usage: python batch_runner.py <input_file> <output_file>")
         sys.exit(1)
 
     try:
-        out = run_batch(sys.argv[1])
+        out = run_batch(sys.argv[1], sys.argv[2])
         print(f"Done — results written to '{out}'.")
     except (FileNotFoundError, ValueError) as e:
         print(f"Error: {e}", file=sys.stderr)

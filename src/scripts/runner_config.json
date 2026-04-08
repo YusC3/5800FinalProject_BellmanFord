@@ -1,0 +1,44 @@
+{
+    "paths": {
+        "single_runner":  "src/scripts/run_single_test_case.py",
+        "ingestor":       "src/data_ingestion/real_world_data_ingestion.py"
+    },
+
+    "test_files": [
+        {
+            "label":  "Unit — constructed test cases",
+            "input":  "tests/unit/test_cases.txt",
+            "output": "results/unit/test_cases_results.txt"
+        },
+        {
+            "label":  "Unit — easy instances",
+            "input":  "tests/unit/easy_instances.txt",
+            "output": "results/unit/easy_instances_results.txt"
+        },
+        {
+            "label":  "Unit — hard instances",
+            "input":  "tests/unit/hard_test_cases.txt",
+            "output": "results/unit/hard_test_cases_results.txt"
+        },
+        {
+            "label":  "Unit — random instances",
+            "input":  "tests/unit/random_test_cases.txt",
+            "output": "results/unit/random_test_cases_results.txt"
+        },
+        {
+            "label":  "Real — SNAP P2P Gnutella",
+            "input":  "tests/real_world/p2p-gnutella.txt",
+            "output": "results/real_world/p2p-gnutella_results.txt"
+        },
+        {
+            "label":  "Real — DIMACS Road NY",
+            "input":  "tests/real_world/road-NY.txt",
+            "output": "results/real_world/road-NY_results.txt"
+        },
+        {
+            "label":  "Real — DIMACS Road BAY",
+            "input":  "tests/real_world/road-BAY.txt",
+            "output": "results/real_world/road-BAY_results.txt"
+        }
+    ]
+}

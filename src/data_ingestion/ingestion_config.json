@@ -1,7 +1,7 @@
 {
     "paths": {
-        "raw_input":  "test/real_world/raw",
-        "converted_output": "test/real_world"
+        "raw_input":  "tests/real_world/raw",
+        "converted_output": "tests/real_world"
     },
 
     "datasets": {

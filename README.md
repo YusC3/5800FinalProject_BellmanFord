@@ -11,15 +11,24 @@ against theoretical O(VE) worst-case bounds.
 ## Quick Start
 
 ```bash
-# 1. Download and convert all datasets, then run all test cases
-python src/scripts/run_all_tests.py
+# Run all tests
+python src/scripts/tests_runner.py -a
 
-# 2. Skip data download if datasets are already prepared
-python src/scripts/run_all_tests.py --skip-data
+# Run unit tests only
+python src/scripts/tests_runner.py -u
 
-# 3. Or run a single input/output pair manually
+# Run real-world tests only
+python src/scripts/tests_runner.py -r
+
+# Run a single test by ID within a category
+python src/scripts/tests_runner.py -u -s 2    # unit test #2
+python src/scripts/tests_runner.py -r -s 1    # real-world test #1
+
+# Or run a single input/output pair manually
 python src/scripts/run_single_test_case.py <input_file> <output_file>
 ```
+
+> **Note:** Data ingestion is not automatic. Download and convert real-world datasets separately before running real-world tests — see [Real-World Datasets](#real-world-datasets-testreal_world) below.
 
 Results are written to `results/`.
 
@@ -34,13 +43,15 @@ project/
 │   ├── graph.py                      # AdjacencyListGraph and AdjacencyMatrixGraph
 │   ├── demo.py
 │   ├── scripts/
-│   │   ├── run_all_tests.py          # Orchestrates data ingestion + all test runs
+│   │   ├── tests_runner.py           # Run test cases (supports flags, see Quick Start)
 │   │   ├── run_single_test_case.py   # Runs one input file, writes one results file
 │   │   └── runner_config.json        # Test file list and tool paths
 │   └── data_ingestion/
 │       ├── real_world_data_ingestor.py  # Downloads, decompresses, and converts datasets
+        ├── convert_snap.py              # Converts data ingested from this source to correct format for test.
+        ├── convert_dimacs.py            # Converts data ingested from this source to correct format for test.
 │       └── ingestion_config.json        # Dataset URLs, filenames, and conversion settings
-├── test/
+├── tests/
 │   ├── unit/
 │   │   ├── test_cases.txt            # Correctness tests (negative edges, cycles, disconnected)
 │   │   ├── easy_instances.txt        # Constructed best-case inputs (chains, DAGs, trees)
@@ -88,7 +99,7 @@ LIST
 
 ## Test Cases
 
-### Unit Tests (`test/unit/`)
+### Unit Tests (`tests/unit/`)
 
 `test_cases.txt` — 5 hand-crafted correctness tests covering:
 - Negative edge weights
@@ -110,19 +121,17 @@ scaling by E, sparse graphs, dense graphs, varying negative-edge ratio, random
 source vertex, and LIST vs MATRIX comparison. Used to evaluate average-case
 behavior and confirm scaling matches theoretical bounds.
 
-### Real-World Datasets (`test/real_world/`)
+### Real-World Datasets (`tests/real_world/`)
 
-Large datasets are not included in this repository. Run the setup script to
-download and convert them automatically:
-
-```bash
-python src/scripts/run_all_tests.py
-```
-
-Or to convert already-downloaded raw files without re-fetching:
+Large datasets are not included in this repository. They must be downloaded and
+converted separately before running real-world tests:
 
 ```bash
-python src/scripts/run_all_tests.py --skip-download
+# Download and convert all datasets
+python src/data_ingestion/real_world_data_ingestor.py
+
+# Convert already-downloaded raw files without re-fetching
+python src/data_ingestion/real_world_data_ingestor.py --skip-download
 ```
 
 | Dataset | Source | Vertices | Edges | Notes |
@@ -131,9 +140,8 @@ python src/scripts/run_all_tests.py --skip-download
 | `road-BAY.txt` | DIMACS 9th Challenge | 321,270 | 800,172 | SF Bay road network, travel-time weights |
 | `p2p-gnutella.txt` | SNAP | 10,876 | 39,994 | P2P network, synthetic weights (seed=42, range [1,100]) |
 
-Raw archives are saved to `test/real_world/raw/` and can be deleted after
+Raw archives are saved to `tests/real_world/raw/` and can be deleted after
 conversion with no effect on the test files.
-
 
 #### About the datasets
 
@@ -169,7 +177,7 @@ Each script reads its own config file — no hardcoded paths anywhere.
 
 | Config file | Lives in | Used by |
 |---|---|---|
-| `runner_config.json` | `src/scripts/` | `run_all_tests.py` — test file list, tool paths |
+| `runner_config.json` | `src/scripts/` | `tests_runner.py` — test file list, IDs, and paths |
 | `ingestion_config.json` | `src/data_ingestion/` | `real_world_data_ingestor.py` — dataset URLs and settings |
 
 To add a new test file, add an entry to `runner_config.json`. To add a new
@@ -205,11 +213,14 @@ All enqueue counts and pass counts are deterministic and will match exactly
 across environments. Wall-clock times will vary by machine.
 
 ```bash
-# Full pipeline (download + convert + run)
-python src/scripts/run_all_tests.py
+# Run all tests
+python src/scripts/tests_runner.py -a
 
-# Skip data setup if datasets are already prepared
-python src/scripts/run_all_tests.py --skip-data
+# Run unit tests only
+python src/scripts/tests_runner.py -u
+
+# Run real-world tests only
+python src/scripts/tests_runner.py -r
 ```
 
 Each test file produces a corresponding results file under `results/`:

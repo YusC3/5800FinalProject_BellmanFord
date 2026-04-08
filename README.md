@@ -12,10 +12,13 @@ against theoretical O(VE) worst-case bounds.
 
 ```bash
 # 1. Download and convert all datasets, then run all test cases
-python scripts/run_all.py
+python src/scripts/run_all_tests.py
 
-# 2. Or run a single input/output pair manually
-python src/batch_runner.py <input_file> <output_file>
+# 2. Skip data download if datasets are already prepared
+python src/scripts/run_all_tests.py --skip-data
+
+# 3. Or run a single input/output pair manually
+python src/scripts/run_single_test_case.py <input_file> <output_file>
 ```
 
 Results are written to `results/`.
@@ -27,24 +30,30 @@ Results are written to `results/`.
 ```
 project/
 ├── src/
-│   ├── batch_runner.py           # Entry point — reads test file, writes results
-│   ├── bellman_ford_algorithm.py # BFM implementation with performance counters
-│   ├── graph.py                  # AdjacencyListGraph and AdjacencyMatrixGraph
-│   └── main.py
+│   ├── bellman_ford_algorithm.py     # BFM implementation with performance counters
+│   ├── graph.py                      # AdjacencyListGraph and AdjacencyMatrixGraph
+│   ├── demo.py
+│   ├── scripts/
+│   │   ├── run_all_tests.py          # Orchestrates data ingestion + all test runs
+│   │   ├── run_single_test_case.py   # Runs one input file, writes one results file
+│   │   └── runner_config.json        # Test file list and tool paths
+│   └── data_ingestion/
+│       ├── real_world_data_ingestor.py  # Downloads, decompresses, and converts datasets
+│       └── ingestion_config.json        # Dataset URLs, filenames, and conversion settings
 ├── test/
 │   ├── unit/
-│   │   ├── test_cases.txt        # Correctness tests (negative edges, cycles, disconnected)
-│   │   ├── easy_instances.txt    # Constructed best-case inputs (chains, DAGs, trees)
-│   │   └── hard_instances.txt    # Constructed worst-case inputs (backward negative edges)
-│   └── real_world/               # Large external datasets — see setup below
+│   │   ├── test_cases.txt            # Correctness tests (negative edges, cycles, disconnected)
+│   │   ├── easy_instances.txt        # Constructed best-case inputs (chains, DAGs, trees)
+│   │   ├── hard_test_cases.txt       # Constructed worst-case inputs (backward negative edges)
+│   │   └── random_test_cases.txt     # Random instances across varying V, E, and density
+│   └── real_world/                   # Large external datasets — see setup below
 │       ├── road-NY.txt
 │       ├── road-BAY.txt
-│       └── p2p-gnutella.txt
-├── scripts/
-│   ├── run_all.py                # Downloads, converts, and runs all test cases
-│   ├── convert_dimacs.py         # Converts DIMACS .gr files to project format
-│   └── convert_snap.py           # Converts SNAP edge lists to project format
-└── results/                      # Output files written here (git-ignored)
+│       ├── p2p-gnutella.txt
+│       └── raw/                      # Downloaded archives (can be deleted after conversion)
+└── results/                          # Output files written here (git-ignored)
+    ├── unit/
+    └── real_world/
 ```
 
 ---
@@ -92,9 +101,14 @@ LIST
 enqueued exactly once. Establishes the O(V) empirical lower bound. Includes
 linear chains, star graphs, binary trees, and forward DAGs.
 
-`hard_instances.txt` — Constructed worst-case instances using backward negative
+`hard_test_cases.txt` — Constructed worst-case instances using backward negative
 edges that force repeated re-enqueuing. Designed to approach the O(V²) upper
 bound on enqueue count.
+
+`random_test_cases.txt` — Random instances across 7 categories: scaling by V,
+scaling by E, sparse graphs, dense graphs, varying negative-edge ratio, random
+source vertex, and LIST vs MATRIX comparison. Used to evaluate average-case
+behavior and confirm scaling matches theoretical bounds.
 
 ### Real-World Datasets (`test/real_world/`)
 
@@ -102,13 +116,13 @@ Large datasets are not included in this repository. Run the setup script to
 download and convert them automatically:
 
 ```bash
-python scripts/run_all.py
+python src/scripts/run_all_tests.py
 ```
 
 Or to convert already-downloaded raw files without re-fetching:
 
 ```bash
-python scripts/run_all.py --skip-download
+python src/scripts/run_all_tests.py --skip-download
 ```
 
 | Dataset | Source | Vertices | Edges | Notes |
@@ -149,6 +163,20 @@ https://snap.stanford.edu/data/
 
 ---
 
+## Configuration
+
+Each script reads its own config file — no hardcoded paths anywhere.
+
+| Config file | Lives in | Used by |
+|---|---|---|
+| `runner_config.json` | `src/scripts/` | `run_all_tests.py` — test file list, tool paths |
+| `ingestion_config.json` | `src/data_ingestion/` | `real_world_data_ingestor.py` — dataset URLs and settings |
+
+To add a new test file, add an entry to `runner_config.json`. To add a new
+real-world dataset, add an entry to `ingestion_config.json`.
+
+---
+
 ## Performance Counters
 
 The BFM implementation records the following metrics on every run:
@@ -178,20 +206,23 @@ across environments. Wall-clock times will vary by machine.
 
 ```bash
 # Full pipeline (download + convert + run)
-python scripts/run_all.py
+python src/scripts/run_all_tests.py
 
 # Skip data setup if datasets are already prepared
-python scripts/run_all.py --tests-only
+python src/scripts/run_all_tests.py --skip-data
 ```
 
-Each test file produces a corresponding results file in `results/`:
+Each test file produces a corresponding results file under `results/`:
 
 ```
 results/
-├── test_cases_results.txt
-├── easy_instances_results.txt
-├── hard_instances_results.txt
-├── road-NY_results.txt
-├── road-BAY_results.txt
-└── p2p-gnutella_results.txt
+├── unit/
+│   ├── test_cases_results.txt
+│   ├── easy_instances_results.txt
+│   ├── hard_test_cases_results.txt
+│   └── random_test_cases_results.txt
+└── real_world/
+    ├── road-NY_results.txt
+    ├── road-BAY_results.txt
+    └── p2p-gnutella_results.txt
 ```

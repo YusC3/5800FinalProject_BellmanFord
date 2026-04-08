@@ -1,0 +1,112 @@
+Bellman-Ford-Moore — Batch Results
+Generated  : 2026-04-07 15:52:03
+Input file : C:\git\5800FinalProject_BellmanFord\test\unit\hard_test_cases.txt
+Test cases : 6
+
+============================================================
+  Test Case #1
+  Representation : LIST
+  Vertices       : 8
+  Edges          : 7
+  Source         : 0
+============================================================
+
+  Vertex     Distance   Path from source
+  --------------------------------------------------
+  0          0.0        0
+  1          -1.0       0 → 1
+  2          -2.0       0 → 1 → 2
+  3          -3.0       0 → 1 → 2 → 3
+  4          -4.0       0 → 1 → 2 → 3 → 4
+  5          -5.0       0 → 1 → 2 → 3 → 4 → 5
+  6          -6.0       0 → 1 → 2 → 3 → 4 → 5 → 6
+  7          -7.0       0 → 1 → 2 → 3 → 4 → 5 → 6 → 7
+
+============================================================
+  Test Case #2
+  Representation : LIST
+  Vertices       : 5
+  Edges          : 6
+  Source         : 0
+============================================================
+
+  Vertex     Distance   Path from source
+  --------------------------------------------------
+  0          0.0        0
+  1          1.0        0 → 3 → 1
+  2          4.0        0 → 3 → 1 → 2
+  3          2.0        0 → 3
+  4          6.0        0 → 3 → 4
+
+============================================================
+  Test Case #3
+  Representation : MATRIX
+  Vertices       : 5
+  Edges          : 20
+  Source         : 0
+============================================================
+
+  Vertex     Distance   Path from source
+  --------------------------------------------------
+  0          -inf       <cycle detected>
+  1          -inf       <cycle detected>
+  2          -inf       <cycle detected>
+  3          -inf       <cycle detected>
+  4          -inf       <cycle detected>
+
+============================================================
+  Test Case #4
+  Representation : LIST
+  Vertices       : 7
+  Edges          : 10
+  Source         : 0
+============================================================
+
+  Vertex     Distance   Path from source
+  --------------------------------------------------
+  0          0.0        0
+  1          -inf       <cycle detected>
+  2          -inf       <cycle detected>
+  3          -inf       <cycle detected>
+  4          -inf       <cycle detected>
+  5          -inf       <cycle detected>
+  6          -inf       <cycle detected>
+
+============================================================
+  Test Case #5
+  Representation : MATRIX
+  Vertices       : 10
+  Edges          : 9
+  Source         : 0
+============================================================
+
+  Vertex     Distance   Path from source
+  --------------------------------------------------
+  0          0.0        0
+  1          -2.0       0 → 1
+  2          -4.0       0 → 1 → 2
+  3          -6.0       0 → 1 → 2 → 3
+  4          -8.0       0 → 1 → 2 → 3 → 4
+  5          -10.0      0 → 1 → 2 → 3 → 4 → 5
+  6          -12.0      0 → 1 → 2 → 3 → 4 → 5 → 6
+  7          -14.0      0 → 1 → 2 → 3 → 4 → 5 → 6 → 7
+  8          -16.0      0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
+  9          -18.0      0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9
+
+============================================================
+  Test Case #6
+  Representation : LIST
+  Vertices       : 6
+  Edges          : 8
+  Source         : 0
+============================================================
+
+  Vertex     Distance   Path from source
+  --------------------------------------------------
+  0          0.0        0
+  1          5.0        0 → 1
+  2          8.0        0 → 1 → 2
+  3          -inf       <cycle detected>
+  4          -inf       <cycle detected>
+  5          -inf       <cycle detected>
+

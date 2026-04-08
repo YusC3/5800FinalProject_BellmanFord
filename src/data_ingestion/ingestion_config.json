@@ -1,0 +1,40 @@
+{
+    "paths": {
+        "raw_input":  "tests/real_world/raw",
+        "converted_output": "tests/real_world"
+    },
+
+    "datasets": {
+        "dimacs": [
+            {
+                "name":    "road-NY",
+                "desc":    "New York road network (264K nodes, 733K edges)",
+                "url":     "http://www.diag.uniroma1.it/challenge9/data/USA-road-t/USA-road-t.NY.gr.gz",
+                "gz_file": "USA-road-t.NY.gr.gz",
+                "gr_file": "USA-road-t.NY.gr",
+                "source":  0
+            },
+            {
+                "name":    "road-BAY",
+                "desc":    "San Francisco Bay road network (321K nodes, 800K edges)",
+                "url":     "http://www.diag.uniroma1.it/challenge9/data/USA-road-t/USA-road-t.BAY.gr.gz",
+                "gz_file": "USA-road-t.BAY.gr.gz",
+                "gr_file": "USA-road-t.BAY.gr",
+                "source":  0
+            }
+        ],
+        "snap": [
+            {
+                "name":       "p2p-gnutella",
+                "desc":       "Gnutella P2P network (10K nodes, 40K edges)",
+                "url":        "https://snap.stanford.edu/data/p2p-Gnutella04.txt.gz",
+                "gz_file":    "p2p-Gnutella04.txt.gz",
+                "txt_file":   "p2p-Gnutella04.txt",
+                "source":     null,
+                "seed":       42,
+                "min_weight": 1,
+                "max_weight": 100
+            }
+        ]
+    }
+}

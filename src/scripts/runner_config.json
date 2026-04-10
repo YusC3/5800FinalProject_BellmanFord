@@ -7,25 +7,25 @@
             "id": 1,
             "label": "Unit \u2014 constructed test cases",
             "input": "tests/unit/test_cases.txt",
-            "output": "results/unit/test_cases_results.txt"
+            "output": "results/unit/test_cases_results.log"
         },
         {
             "id": 2,
             "label": "Unit \u2014 easy instances",
             "input": "tests/unit/easy_instances.txt",
-            "output": "results/unit/easy_instances_results.txt"
+            "output": "results/unit/easy_instances_results.log"
         },
         {
             "id": 3,
             "label": "Unit \u2014 hard instances",
             "input": "tests/unit/hard_test_cases.txt",
-            "output": "results/unit/hard_test_cases_results.txt"
+            "output": "results/unit/hard_test_cases_results.log"
         },
         {
             "id": 4,
             "label": "Unit \u2014 random instances",
             "input": "tests/unit/random_test_cases.txt",
-            "output": "results/unit/random_test_cases_results.txt"
+            "output": "results/unit/random_test_cases_results.log"
         }
     ],
     "real_world_tests": [
@@ -33,19 +33,19 @@
             "id": 1,
             "label": "Real \u2014 SNAP P2P Gnutella",
             "input": "tests/real_world/p2p-gnutella.txt",
-            "output": "results/real_world/p2p-gnutella_results.txt"
+            "output": "results/real_world/p2p-gnutella_results.log"
         },
         {
             "id": 2,
             "label": "Real \u2014 DIMACS Road NY",
             "input": "tests/real_world/road-NY.txt",
-            "output": "results/real_world/road-NY_results.txt"
+            "output": "results/real_world/road-NY_results.log"
         },
         {
             "id": 3,
             "label": "Real \u2014 DIMACS Road BAY",
             "input": "tests/real_world/road-BAY.txt",
-            "output": "results/real_world/road-BAY_results.txt"
+            "output": "results/real_world/road-BAY_results.log"
         }
     ]
 }

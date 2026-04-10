@@ -1,13 +1,20 @@
 # ──────────────────────────────────────────────
-# batch_runner.py
+# run_single_test_case.py  (formerly batch_runner.py)
 # ──────────────────────────────────────────────
 """
 Reads one or more Bellman-Ford-Moore test cases from a plain-text file,
-runs the algorithm on each, and writes the results to an output file
-inside a 'results/' folder.
+runs the algorithm on each, and writes a structured log to an output .log file.
 
-Output naming:  results/<input_stem>_results.txt
-                e.g. hard_test_cases.txt -> results/hard_test_cases_results.txt
+The "bfm" logger is initialised here and shared — bellman_ford_algorithm.py
+writes performance metrics into the same file via logging.getLogger("bfm").
+
+Log structure per run
+─────────────────────
+  File header  : timestamp, input path, test case count, shared I/O overhead
+  Per test case: Graph Details, Performance, Performance Overhead
+
+Output naming:  results/<input_stem>_results.log
+                e.g. hard_test_cases.txt -> results/hard_test_cases_results.log
 
 Input file format (blank line separates test cases)
 ────────────────────────────────────────────────────
@@ -19,7 +26,9 @@ LIST|MATRIX          <- graph representation (case-insensitive)
                      <- blank line (or EOF) ends the test case
 """
 
-import io
+import logging
+import sys
+import time
 from datetime import datetime
 from pathlib import Path
 
@@ -27,7 +36,28 @@ from bellman_ford_algorithm import bellman_ford_moore
 from graph import AdjacencyListGraph, AdjacencyMatrixGraph
 
 
-# ── helpers ───────────────────────────────────────────────────────────────────
+# ── Logger setup ──────────────────────────────────────────────────────────────
+
+def _setup_logger(log_path: Path) -> logging.Logger:
+    """
+    Configure the singleton "bfm" logger to write to *log_path*.
+    Called once per input file. Any previous handlers are removed first
+    so that re-running in the same process doesn't double-log.
+    """
+    logger = logging.getLogger("bfm")
+    logger.setLevel(logging.DEBUG)
+
+    # Remove stale handlers from a previous run in the same process
+    logger.handlers.clear()
+
+    handler = logging.FileHandler(log_path, mode="w", encoding="utf-8")
+    handler.setLevel(logging.DEBUG)
+    handler.setFormatter(logging.Formatter("%(message)s"))
+    logger.addHandler(handler)
+    return logger
+
+
+# ── Parsing ───────────────────────────────────────────────────────────────────
 
 def _parse_test_cases(lines: list[str]) -> list[dict]:
     """
@@ -100,7 +130,7 @@ def _parse_test_cases(lines: list[str]) -> list[dict]:
             raise ValueError(f"Source vertex {source} is out of range [0, {V - 1}].")
 
         test_cases.append(
-            dict(GraphClass=GraphClass, rep=rep, V=V, edges=edges, source=source)
+            dict(GraphClass=GraphClass, rep=rep, V=V, E=E, edges=edges, source=source)
         )
 
     for line in lines:
@@ -116,6 +146,8 @@ def _parse_test_cases(lines: list[str]) -> list[dict]:
     _flush(current)
     return test_cases
 
+
+# ── Result formatting ─────────────────────────────────────────────────────────
 
 def _format_path(prev: list, source: int, target: int) -> str:
     path = []
@@ -135,44 +167,63 @@ def _format_path(prev: list, source: int, target: int) -> str:
     return " → ".join(reversed(path))
 
 
-def _format_results(dist: list, prev: list, source: int, case_num: int,
-                    rep: str, V: int, edges: list) -> str:
-    out = io.StringIO()
+def _log_results(logger: logging.Logger, dist: list, prev: list,
+                 source: int, case_num: int, rep: str, V: int, edges: list,
+                 perf: dict, graph_build_sec: float) -> None:
+    """Log graph details, performance metrics, overhead, and correctness results."""
 
-    out.write(f"{'=' * 60}\n")
-    out.write(f"  Test Case #{case_num}\n")
-    out.write(f"  Representation : {rep}\n")
-    out.write(f"  Vertices       : {V}\n")
-    out.write(f"  Edges          : {len(edges)}\n")
-    out.write(f"  Source         : {source}\n")
-    out.write(f"{'=' * 60}\n\n")
+    logger.info("=" * 60)
+    logger.info("TEST CASE #%d", case_num)
+    logger.info("=" * 60)
+    logger.info("")
 
+    # ── Graph Details ─────────────────────────────────────────────────────────
+    logger.info("  Graph Details")
+    logger.info("  %-18s : %s",   "Representation", rep)
+    logger.info("  %-18s : %d",   "Vertices",       V)
+    logger.info("  %-18s : %d",   "Edges",          len(edges))
+    logger.info("  %-18s : %d",   "Source",         source)
+    logger.info("")
+
+    # ── Performance ───────────────────────────────────────────────────────────
+    logger.info("  Performance")
+    logger.info("  %-18s : %d",   "rounds",      perf["rounds"])
+    logger.info("  %-18s : %d",   "relaxations", perf["relaxations"])
+    logger.info("  %-18s : %s",   "early_stop",  perf["early_stop"])
+    logger.info("  %-18s : %.6f s", "elapsed_sec", perf["elapsed_sec"])
+    logger.info("")
+
+    # ── Performance Overhead ──────────────────────────────────────────────────
+    logger.info("  Performance Overhead")
+    logger.info("  %-18s : %.6f s", "graph_build_sec", graph_build_sec)
+    logger.info("")
+
+    # ── Correctness Results ───────────────────────────────────────────────────
     if dist is None:
-        out.write("  *** Negative-weight cycle detected — no solution. ***\n\n")
-        return out.getvalue()
+        logger.info("  *** Negative-weight cycle detected — no solution. ***")
+        logger.info("")
+        return
 
-    col_w = 10
-    out.write(f"  {'Vertex':<{col_w}} {'Distance':<{col_w}} {'Path from source'}\n")
-    out.write(f"  {'-' * 50}\n")
+    logger.info("  %-10s %-15s %s", "Vertex", "Distance", "Path from source")
+    logger.info("  " + "-" * 50)
 
     for v in range(V):
         if dist[v] == float("inf"):
-            dist_str, path_str = "∞", "<unreachable>"
+            dist_str, path_str = "inf", "<unreachable>"
         else:
             dist_str = str(dist[v])
             path_str = _format_path(prev, source, v)
-        out.write(f"  {v:<{col_w}} {dist_str:<{col_w}} {path_str}\n")
+        logger.info("  %-10d %-15s %s", v, dist_str, path_str)
 
-    out.write("\n")
-    return out.getvalue()
+    logger.info("")
 
 
-# ── public API ────────────────────────────────────────────────────────────────
+# ── Public API ────────────────────────────────────────────────────────────────
 
 def run_batch(input_path: str | Path, output_path: str | Path) -> Path:
     """
     Read test cases from *input_path*, run Bellman-Ford-Moore on each,
-    and write results to *output_path*.
+    and write a structured log (correctness + performance) to *output_path*.
 
     The parent directory of output_path is created if it does not exist.
 
@@ -191,32 +242,53 @@ def run_batch(input_path: str | Path, output_path: str | Path) -> Path:
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
+    # ── Initialise the singleton logger for this input file ───────────────────
+    logger = _setup_logger(output_path)
+
+    # ── Read input file and time it ───────────────────────────────────────────
+    t_read_start = time.perf_counter()
     lines = input_path.read_text(encoding="utf-8").splitlines()
+    io_read_sec = time.perf_counter() - t_read_start
+
     test_cases = _parse_test_cases(lines)
 
     if not test_cases:
         raise ValueError("No test cases found in the input file.")
 
-    with output_path.open("w", encoding="utf-8") as fout:
-        # ── timestamp header ──────────────────────────────────
-        stamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        fout.write(f"Bellman-Ford-Moore — Batch Results\n")
-        fout.write(f"Generated  : {stamp}\n")
-        fout.write(f"Input file : {input_path}\n")
-        fout.write(f"Test cases : {len(test_cases)}\n\n")
+    # ── File header ───────────────────────────────────────────────────────────
+    stamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    logger.info("Bellman-Ford-Moore — Batch Results")
+    logger.info("Generated   : %s", stamp)
+    logger.info("Input file  : %s", input_path)
+    logger.info("Test cases  : %d", len(test_cases))
+    logger.info("")
+    logger.info("  I/O Overhead (shared across all test cases)")
+    logger.info("  %-18s : %.6f s", "io_read_sec", io_read_sec)
+    logger.info("")
 
-        for i, tc in enumerate(test_cases, start=1):
-            graph = tc["GraphClass"](tc["V"])
-            for u, v, w in tc["edges"]:
-                graph.add_edge(u, v, w)
+    # ── Run each test case ────────────────────────────────────────────────────
+    for i, tc in enumerate(test_cases, start=1):
 
-            dist, prev = bellman_ford_moore(graph, tc["source"])
+        # Time graph construction only (not BFM)
+        t_build_start = time.perf_counter()
+        graph = tc["GraphClass"](tc["V"])
+        for u, v, w in tc["edges"]:
+            graph.add_edge(u, v, w)
+        graph_build_sec = time.perf_counter() - t_build_start
 
-            block = _format_results(
-                dist, prev, tc["source"],
-                case_num=i, rep=tc["rep"], V=tc["V"], edges=tc["edges"],
-            )
-            fout.write(block)
+        # Run BFM — performance metrics stored in bellman_ford_algorithm.last_run
+        from bellman_ford_algorithm import last_run
+        dist, prev = bellman_ford_moore(graph, tc["source"])
+
+        # Log all sections for this test case
+        _log_results(logger, dist, prev, tc["source"],
+                     case_num=i, rep=tc["rep"], V=tc["V"], edges=tc["edges"],
+                     perf=last_run, graph_build_sec=graph_build_sec)
+
+    # Flush and close the file handler cleanly
+    for handler in logger.handlers:
+        handler.flush()
+        handler.close()
 
     return output_path
 
@@ -224,15 +296,13 @@ def run_batch(input_path: str | Path, output_path: str | Path) -> Path:
 # ── CLI entry point ───────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
-    import sys
-
     if len(sys.argv) != 3:
-        print("Usage: python batch_runner.py <input_file> <output_file>")
+        print("Usage: python run_single_test_case.py <input_file> <output_file>")
         sys.exit(1)
 
     try:
         out = run_batch(sys.argv[1], sys.argv[2])
-        print(f"Done — results written to '{out}'.")
+        print(f"Done — log written to '{out}'.")
     except (FileNotFoundError, ValueError) as e:
         print(f"Error: {e}", file=sys.stderr)
         sys.exit(1)

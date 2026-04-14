@@ -12,9 +12,6 @@ env/
 # ── Raw dataset archives (large, re-downloadable) ─────────────
 test/real_world/raw/
 
-# ── Generated results (re-runnable) ───────────────────────────
-results/
-
 # ── macOS ──────────────────────────────────────────────────────
 .DS_Store
 

@@ -1,0 +1,684 @@
+Bellman-Ford-Moore — Batch Results
+Generated   : 2026-04-10 14:52:01
+Input file  : C:\git\5800FinalProject_BellmanFord\tests\unit\random_test_cases.txt
+Test cases  : 18
+
+  I/O Overhead (shared across all test cases)
+  io_read_sec        : 0.000351 s
+
+============================================================
+TEST CASE #1
+============================================================
+
+  Graph Details
+  Representation     : LIST
+  Vertices           : 5
+  Edges              : 6
+  Source             : 0
+
+  Performance
+  rounds             : 2
+  relaxations        : 6
+  early_stop         : True
+  elapsed_sec        : 0.000018 s
+
+  Performance Overhead
+  graph_build_sec    : 0.000008 s
+
+  Vertex     Distance        Path from source
+  --------------------------------------------------
+  0          0.0             0
+  1          2.0             0 → 2 → 3 → 4 → 1
+  2          -3.0            0 → 2
+  3          -1.0            0 → 2 → 3
+  4          -2.0            0 → 2 → 3 → 4
+
+============================================================
+TEST CASE #2
+============================================================
+
+  Graph Details
+  Representation     : LIST
+  Vertices           : 10
+  Edges              : 27
+  Source             : 0
+
+  Performance
+  rounds             : 9
+  relaxations        : 61
+  early_stop         : False
+  elapsed_sec        : 0.000091 s
+
+  Performance Overhead
+  graph_build_sec    : 0.000011 s
+
+  Vertex     Distance        Path from source
+  --------------------------------------------------
+  0          -inf            <cycle detected>
+  1          -inf            <cycle detected>
+  2          -inf            <cycle detected>
+  3          -inf            <cycle detected>
+  4          -inf            <cycle detected>
+  5          -inf            <cycle detected>
+  6          -inf            <cycle detected>
+  7          -inf            <cycle detected>
+  8          -inf            <cycle detected>
+  9          -inf            <cycle detected>
+
+============================================================
+TEST CASE #3
+============================================================
+
+  Graph Details
+  Representation     : LIST
+  Vertices           : 25
+  Edges              : 131
+  Source             : 0
+
+  Performance
+  rounds             : 24
+  relaxations        : 1107
+  early_stop         : False
+  elapsed_sec        : 0.000945 s
+
+  Performance Overhead
+  graph_build_sec    : 0.000029 s
+
+  Vertex     Distance        Path from source
+  --------------------------------------------------
+  0          -inf            <cycle detected>
+  1          -inf            <cycle detected>
+  2          -inf            <cycle detected>
+  3          -inf            <cycle detected>
+  4          -inf            <cycle detected>
+  5          -inf            <cycle detected>
+  6          -inf            <cycle detected>
+  7          -inf            <cycle detected>
+  8          -inf            <cycle detected>
+  9          -inf            <cycle detected>
+  10         -inf            <cycle detected>
+  11         -inf            <cycle detected>
+  12         -inf            <cycle detected>
+  13         -inf            <cycle detected>
+  14         -inf            <cycle detected>
+  15         -inf            <cycle detected>
+  16         -inf            <cycle detected>
+  17         -inf            <cycle detected>
+  18         -inf            <cycle detected>
+  19         -inf            <cycle detected>
+  20         -inf            <cycle detected>
+  21         -inf            <cycle detected>
+  22         -inf            <cycle detected>
+  23         -inf            <cycle detected>
+  24         -inf            <cycle detected>
+
+============================================================
+TEST CASE #4
+============================================================
+
+  Graph Details
+  Representation     : LIST
+  Vertices           : 20
+  Edges              : 19
+  Source             : 0
+
+  Performance
+  rounds             : 2
+  relaxations        : 19
+  early_stop         : True
+  elapsed_sec        : 0.000081 s
+
+  Performance Overhead
+  graph_build_sec    : 0.000008 s
+
+  Vertex     Distance        Path from source
+  --------------------------------------------------
+  0          0.0             0
+  1          4.0             0 → 1
+  2          2.0             0 → 1 → 2
+  3          9.0             0 → 1 → 2 → 3
+  4          10.0            0 → 1 → 2 → 3 → 4
+  5          7.0             0 → 1 → 2 → 3 → 4 → 5
+  6          12.0            0 → 1 → 2 → 3 → 4 → 5 → 6
+  7          14.0            0 → 1 → 2 → 3 → 4 → 5 → 6 → 7
+  8          13.0            0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
+  9          19.0            0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9
+  10         22.0            0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10
+  11         18.0            0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11
+  12         20.0            0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11 → 12
+  13         25.0            0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11 → 12 → 13
+  14         24.0            0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11 → 12 → 13 → 14
+  15         27.0            0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11 → 12 → 13 → 14 → 15
+  16         25.0            0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11 → 12 → 13 → 14 → 15 → 16
+  17         29.0            0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11 → 12 → 13 → 14 → 15 → 16 → 17
+  18         30.0            0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11 → 12 → 13 → 14 → 15 → 16 → 17 → 18
+  19         27.0            0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 → 11 → 12 → 13 → 14 → 15 → 16 → 17 → 18 → 19
+
+============================================================
+TEST CASE #5
+============================================================
+
+  Graph Details
+  Representation     : LIST
+  Vertices           : 20
+  Edges              : 56
+  Source             : 0
+
+  Performance
+  rounds             : 19
+  relaxations        : 510
+  early_stop         : False
+  elapsed_sec        : 0.000649 s
+
+  Performance Overhead
+  graph_build_sec    : 0.000024 s
+
+  Vertex     Distance        Path from source
+  --------------------------------------------------
+  0          -inf            <cycle detected>
+  1          -inf            <cycle detected>
+  2          -inf            <cycle detected>
+  3          -inf            <cycle detected>
+  4          -inf            <cycle detected>
+  5          -inf            <cycle detected>
+  6          -inf            <cycle detected>
+  7          -inf            <cycle detected>
+  8          -inf            <cycle detected>
+  9          -inf            <cycle detected>
+  10         -inf            <cycle detected>
+  11         -inf            <cycle detected>
+  12         -inf            <cycle detected>
+  13         -inf            <cycle detected>
+  14         -inf            <cycle detected>
+  15         -inf            <cycle detected>
+  16         -inf            <cycle detected>
+  17         -inf            <cycle detected>
+  18         -inf            <cycle detected>
+  19         -inf            <cycle detected>
+
+============================================================
+TEST CASE #6
+============================================================
+
+  Graph Details
+  Representation     : LIST
+  Vertices           : 20
+  Edges              : 380
+  Source             : 0
+
+  Performance
+  rounds             : 19
+  relaxations        : 2804
+  early_stop         : False
+  elapsed_sec        : 0.002099 s
+
+  Performance Overhead
+  graph_build_sec    : 0.000082 s
+
+  Vertex     Distance        Path from source
+  --------------------------------------------------
+  0          -inf            <cycle detected>
+  1          -inf            <cycle detected>
+  2          -inf            <cycle detected>
+  3          -inf            <cycle detected>
+  4          -inf            <cycle detected>
+  5          -inf            <cycle detected>
+  6          -inf            <cycle detected>
+  7          -inf            <cycle detected>
+  8          -inf            <cycle detected>
+  9          -inf            <cycle detected>
+  10         -inf            <cycle detected>
+  11         -inf            <cycle detected>
+  12         -inf            <cycle detected>
+  13         -inf            <cycle detected>
+  14         -inf            <cycle detected>
+  15         -inf            <cycle detected>
+  16         -inf            <cycle detected>
+  17         -inf            <cycle detected>
+  18         -inf            <cycle detected>
+  19         -inf            <cycle detected>
+
+============================================================
+TEST CASE #7
+============================================================
+
+  Graph Details
+  Representation     : LIST
+  Vertices           : 10
+  Edges              : 10
+  Source             : 0
+
+  Performance
+  rounds             : 2
+  relaxations        : 9
+  early_stop         : True
+  elapsed_sec        : 0.000026 s
+
+  Performance Overhead
+  graph_build_sec    : 0.000009 s
+
+  Vertex     Distance        Path from source
+  --------------------------------------------------
+  0          0.0             0
+  1          3.0             0 → 1
+  2          1.0             0 → 1 → 2
+  3          6.0             0 → 1 → 2 → 3
+  4          7.0             0 → 1 → 2 → 3 → 4
+  5          3.0             0 → 1 → 2 → 3 → 4 → 5
+  6          6.0             0 → 1 → 2 → 3 → 4 → 5 → 6
+  7          5.0             0 → 1 → 2 → 3 → 4 → 5 → 6 → 7
+  8          9.0             0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
+  9          11.0            0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9
+
+============================================================
+TEST CASE #8
+============================================================
+
+  Graph Details
+  Representation     : LIST
+  Vertices           : 30
+  Edges              : 35
+  Source             : 0
+
+  Performance
+  rounds             : 2
+  relaxations        : 31
+  early_stop         : True
+  elapsed_sec        : 0.000193 s
+
+  Performance Overhead
+  graph_build_sec    : 0.000009 s
+
+  Vertex     Distance        Path from source
+  --------------------------------------------------
+  0          0.0             0
+  1          4.0             0 → 1
+  2          2.0             0 → 1 → 2
+  3          8.0             0 → 1 → 2 → 3
+  4          9.0             0 → 1 → 2 → 3 → 4
+  5          6.0             0 → 1 → 2 → 3 → 4 → 5
+  6          11.0            0 → 1 → 2 → 3 → 4 → 5 → 6
+  7          13.0            0 → 1 → 2 → 3 → 4 → 5 → 6 → 7
+  8          12.0            0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
+  9          16.0            0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9
+  10         -2.0            0 → 10
+  11         -4.0            0 → 10 → 11
+  12         2.0             0 → 10 → 11 → 12
+  13         3.0             0 → 10 → 11 → 12 → 13
+  14         -1.0            0 → 10 → 11 → 12 → 13 → 14
+  15         2.0             0 → 10 → 11 → 12 → 13 → 14 → 15
+  16         1.0             0 → 10 → 11 → 12 → 13 → 14 → 15 → 16
+  17         6.0             0 → 10 → 11 → 12 → 13 → 14 → 15 → 16 → 17
+  18         8.0             0 → 10 → 11 → 12 → 13 → 14 → 15 → 16 → 17 → 18
+  19         5.0             0 → 10 → 11 → 12 → 13 → 14 → 15 → 16 → 17 → 18 → 19
+  20         1.0             0 → 1 → 2 → 20
+  21         2.0             0 → 1 → 2 → 20 → 21
+  22         0.0             0 → 1 → 2 → 20 → 21 → 22
+  23         6.0             0 → 1 → 2 → 20 → 21 → 22 → 23
+  24         9.0             0 → 1 → 2 → 20 → 21 → 22 → 23 → 24
+  25         8.0             0 → 1 → 2 → 20 → 21 → 22 → 23 → 24 → 25
+  26         12.0            0 → 1 → 2 → 20 → 21 → 22 → 23 → 24 → 25 → 26
+  27         14.0            0 → 1 → 2 → 20 → 21 → 22 → 23 → 24 → 25 → 26 → 27
+  28         -4.0            0 → 10 → 28
+  29         1.0             0 → 10 → 28 → 29
+
+============================================================
+TEST CASE #9
+============================================================
+
+  Graph Details
+  Representation     : MATRIX
+  Vertices           : 5
+  Edges              : 20
+  Source             : 0
+
+  Performance
+  rounds             : 4
+  relaxations        : 38
+  early_stop         : False
+  elapsed_sec        : 0.000041 s
+
+  Performance Overhead
+  graph_build_sec    : 0.000012 s
+
+  Vertex     Distance        Path from source
+  --------------------------------------------------
+  0          -inf            <cycle detected>
+  1          -inf            <cycle detected>
+  2          -inf            <cycle detected>
+  3          -inf            <cycle detected>
+  4          -inf            <cycle detected>
+
+============================================================
+TEST CASE #10
+============================================================
+
+  Graph Details
+  Representation     : MATRIX
+  Vertices           : 10
+  Edges              : 90
+  Source             : 0
+
+  Performance
+  rounds             : 9
+  relaxations        : 316
+  early_stop         : False
+  elapsed_sec        : 0.000303 s
+
+  Performance Overhead
+  graph_build_sec    : 0.000017 s
+
+  Vertex     Distance        Path from source
+  --------------------------------------------------
+  0          -inf            <cycle detected>
+  1          -inf            <cycle detected>
+  2          -inf            <cycle detected>
+  3          -inf            <cycle detected>
+  4          -inf            <cycle detected>
+  5          -inf            <cycle detected>
+  6          -inf            <cycle detected>
+  7          -inf            <cycle detected>
+  8          -inf            <cycle detected>
+  9          -inf            <cycle detected>
+
+============================================================
+TEST CASE #11
+============================================================
+
+  Graph Details
+  Representation     : LIST
+  Vertices           : 15
+  Edges              : 40
+  Source             : 0
+
+  Performance
+  rounds             : 2
+  relaxations        : 17
+  early_stop         : True
+  elapsed_sec        : 0.000188 s
+
+  Performance Overhead
+  graph_build_sec    : 0.000020 s
+
+  Vertex     Distance        Path from source
+  --------------------------------------------------
+  0          0.0             0
+  1          5.0             0 → 1
+  2          3.0             0 → 2
+  3          8.0             0 → 3
+  4          2.0             0 → 4
+  5          9.0             0 → 1 → 5
+  6          7.0             0 → 6
+  7          6.0             0 → 1 → 7
+  8          8.0             0 → 1 → 8
+  9          2.0             0 → 9
+  10         8.0             0 → 2 → 10
+  11         8.0             0 → 4 → 11
+  12         10.0            0 → 3 → 12
+  13         10.0            0 → 1 → 5 → 13
+  14         3.0             0 → 4 → 14
+
+============================================================
+TEST CASE #12
+============================================================
+
+  Graph Details
+  Representation     : LIST
+  Vertices           : 15
+  Edges              : 40
+  Source             : 0
+
+  Performance
+  rounds             : 14
+  relaxations        : 286
+  early_stop         : False
+  elapsed_sec        : 0.000202 s
+
+  Performance Overhead
+  graph_build_sec    : 0.000014 s
+
+  Vertex     Distance        Path from source
+  --------------------------------------------------
+  0          -inf            <cycle detected>
+  1          -inf            <cycle detected>
+  2          -inf            <cycle detected>
+  3          -inf            <cycle detected>
+  4          -inf            <cycle detected>
+  5          -inf            <cycle detected>
+  6          -inf            <cycle detected>
+  7          -inf            <cycle detected>
+  8          -inf            <cycle detected>
+  9          -inf            <cycle detected>
+  10         -inf            <cycle detected>
+  11         -inf            <cycle detected>
+  12         -inf            <cycle detected>
+  13         -inf            <cycle detected>
+  14         -inf            <cycle detected>
+
+============================================================
+TEST CASE #13
+============================================================
+
+  Graph Details
+  Representation     : LIST
+  Vertices           : 15
+  Edges              : 40
+  Source             : 0
+
+  Performance
+  rounds             : 14
+  relaxations        : 384
+  early_stop         : False
+  elapsed_sec        : 0.000197 s
+
+  Performance Overhead
+  graph_build_sec    : 0.000010 s
+
+  Vertex     Distance        Path from source
+  --------------------------------------------------
+  0          -inf            <cycle detected>
+  1          -inf            <cycle detected>
+  2          -inf            <cycle detected>
+  3          -inf            <cycle detected>
+  4          -inf            <cycle detected>
+  5          -inf            <cycle detected>
+  6          -inf            <cycle detected>
+  7          -inf            <cycle detected>
+  8          -inf            <cycle detected>
+  9          -inf            <cycle detected>
+  10         -inf            <cycle detected>
+  11         -inf            <cycle detected>
+  12         -inf            <cycle detected>
+  13         -inf            <cycle detected>
+  14         -inf            <cycle detected>
+
+============================================================
+TEST CASE #14
+============================================================
+
+  Graph Details
+  Representation     : LIST
+  Vertices           : 20
+  Edges              : 50
+  Source             : 0
+
+  Performance
+  rounds             : 19
+  relaxations        : 419
+  early_stop         : False
+  elapsed_sec        : 0.000320 s
+
+  Performance Overhead
+  graph_build_sec    : 0.000011 s
+
+  Vertex     Distance        Path from source
+  --------------------------------------------------
+  0          -inf            <cycle detected>
+  1          -inf            <cycle detected>
+  2          -inf            <cycle detected>
+  3          -inf            <cycle detected>
+  4          -inf            <cycle detected>
+  5          -inf            <cycle detected>
+  6          -inf            <cycle detected>
+  7          -inf            <cycle detected>
+  8          -inf            <cycle detected>
+  9          -inf            <cycle detected>
+  10         -inf            <cycle detected>
+  11         -inf            <cycle detected>
+  12         -inf            <cycle detected>
+  13         -inf            <cycle detected>
+  14         -inf            <cycle detected>
+  15         -inf            <cycle detected>
+  16         -inf            <cycle detected>
+  17         -inf            <cycle detected>
+  18         -inf            <cycle detected>
+  19         -inf            <cycle detected>
+
+============================================================
+TEST CASE #15
+============================================================
+
+  Graph Details
+  Representation     : LIST
+  Vertices           : 20
+  Edges              : 50
+  Source             : 7
+
+  Performance
+  rounds             : 19
+  relaxations        : 398
+  early_stop         : False
+  elapsed_sec        : 0.000315 s
+
+  Performance Overhead
+  graph_build_sec    : 0.000012 s
+
+  Vertex     Distance        Path from source
+  --------------------------------------------------
+  0          -inf            <cycle detected>
+  1          -inf            <cycle detected>
+  2          -inf            <cycle detected>
+  3          -inf            <cycle detected>
+  4          -inf            <cycle detected>
+  5          -inf            <cycle detected>
+  6          -inf            <cycle detected>
+  7          -inf            <cycle detected>
+  8          -inf            <cycle detected>
+  9          -inf            <cycle detected>
+  10         -inf            <cycle detected>
+  11         -inf            <cycle detected>
+  12         -inf            <cycle detected>
+  13         -inf            <cycle detected>
+  14         -inf            <cycle detected>
+  15         -inf            <cycle detected>
+  16         -inf            <cycle detected>
+  17         -inf            <cycle detected>
+  18         -inf            <cycle detected>
+  19         -inf            <cycle detected>
+
+============================================================
+TEST CASE #16
+============================================================
+
+  Graph Details
+  Representation     : LIST
+  Vertices           : 20
+  Edges              : 50
+  Source             : 14
+
+  Performance
+  rounds             : 19
+  relaxations        : 371
+  early_stop         : False
+  elapsed_sec        : 0.000401 s
+
+  Performance Overhead
+  graph_build_sec    : 0.000025 s
+
+  Vertex     Distance        Path from source
+  --------------------------------------------------
+  0          -inf            <cycle detected>
+  1          -inf            <cycle detected>
+  2          -inf            <cycle detected>
+  3          -inf            <cycle detected>
+  4          -inf            <cycle detected>
+  5          -inf            <cycle detected>
+  6          -inf            <cycle detected>
+  7          -inf            <cycle detected>
+  8          -inf            <cycle detected>
+  9          -inf            <cycle detected>
+  10         -inf            <cycle detected>
+  11         -inf            <cycle detected>
+  12         -inf            <cycle detected>
+  13         -inf            <cycle detected>
+  14         -inf            <cycle detected>
+  15         -inf            <cycle detected>
+  16         -inf            <cycle detected>
+  17         -inf            <cycle detected>
+  18         -inf            <cycle detected>
+  19         -inf            <cycle detected>
+
+============================================================
+TEST CASE #17
+============================================================
+
+  Graph Details
+  Representation     : LIST
+  Vertices           : 10
+  Edges              : 25
+  Source             : 0
+
+  Performance
+  rounds             : 9
+  relaxations        : 136
+  early_stop         : False
+  elapsed_sec        : 0.000148 s
+
+  Performance Overhead
+  graph_build_sec    : 0.000024 s
+
+  Vertex     Distance        Path from source
+  --------------------------------------------------
+  0          -inf            <cycle detected>
+  1          -inf            <cycle detected>
+  2          -inf            <cycle detected>
+  3          -inf            <cycle detected>
+  4          -inf            <cycle detected>
+  5          -inf            <cycle detected>
+  6          -inf            <cycle detected>
+  7          -inf            <cycle detected>
+  8          -inf            <cycle detected>
+  9          -inf            <cycle detected>
+
+============================================================
+TEST CASE #18
+============================================================
+
+  Graph Details
+  Representation     : MATRIX
+  Vertices           : 10
+  Edges              : 25
+  Source             : 0
+
+  Performance
+  rounds             : 9
+  relaxations        : 126
+  early_stop         : False
+  elapsed_sec        : 0.000145 s
+
+  Performance Overhead
+  graph_build_sec    : 0.000010 s
+
+  Vertex     Distance        Path from source
+  --------------------------------------------------
+  0          -inf            <cycle detected>
+  1          -inf            <cycle detected>
+  2          -inf            <cycle detected>
+  3          -inf            <cycle detected>
+  4          -inf            <cycle detected>
+  5          -inf            <cycle detected>
+  6          -inf            <cycle detected>
+  7          -inf            <cycle detected>
+  8          -inf            <cycle detected>
+  9          -inf            <cycle detected>
+

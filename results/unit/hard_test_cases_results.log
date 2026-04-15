@@ -1,10 +1,10 @@
 Bellman-Ford-Moore — Batch Results
-Generated   : 2026-04-10 14:52:01
-Input file  : C:\git\5800FinalProject_BellmanFord\tests\unit\hard_test_cases.txt
+Generated   : 2026-04-15 16:42:57
+Input file  : C:\Users\helen\Desktop\5800FinalProject_BellmanFord\tests\unit\hard_test_cases.txt
 Test cases  : 6
 
   I/O Overhead (shared across all test cases)
-  io_read_sec        : 0.000285 s
+  io_read_sec        : 0.000146 s
 
 ============================================================
 TEST CASE #1
@@ -17,10 +17,11 @@ TEST CASE #1
   Source             : 0
 
   Performance
-  rounds             : 2
-  relaxations        : 7
-  early_stop         : True
-  elapsed_sec        : 0.000026 s
+  enqueue_count          : 8
+  total_relaxations      : 7
+  enqueue_ratio          : 1.00
+  max_enqueues           : 1
+  elapsed_sec            : 0.000179 s
 
   Performance Overhead
   graph_build_sec    : 0.000008 s
@@ -47,13 +48,14 @@ TEST CASE #2
   Source             : 0
 
   Performance
-  rounds             : 3
-  relaxations        : 6
-  early_stop         : True
-  elapsed_sec        : 0.000015 s
+  enqueue_count          : 7
+  total_relaxations      : 6
+  enqueue_ratio          : 1.40
+  max_enqueues           : 2
+  elapsed_sec            : 0.000116 s
 
   Performance Overhead
-  graph_build_sec    : 0.000005 s
+  graph_build_sec    : 0.000006 s
 
   Vertex     Distance        Path from source
   --------------------------------------------------
@@ -74,13 +76,16 @@ TEST CASE #3
   Source             : 0
 
   Performance
-  rounds             : 4
-  relaxations        : 80
-  early_stop         : False
-  elapsed_sec        : 0.000057 s
+  enqueue_count          : 26
+  total_relaxations      : 85
+  enqueue_ratio          : 5.20
+  max_enqueues           : 6
+  elapsed_sec            : 0.000151 s
 
   Performance Overhead
-  graph_build_sec    : 0.000014 s
+  graph_build_sec    : 0.000012 s
+
+  *** Negative-weight cycle detected — affected vertices have -inf distances. ***
 
   Vertex     Distance        Path from source
   --------------------------------------------------
@@ -101,13 +106,16 @@ TEST CASE #4
   Source             : 0
 
   Performance
-  rounds             : 6
-  relaxations        : 33
-  early_stop         : False
-  elapsed_sec        : 0.000033 s
+  enqueue_count          : 34
+  total_relaxations      : 34
+  enqueue_ratio          : 4.86
+  max_enqueues           : 8
+  elapsed_sec            : 0.000112 s
 
   Performance Overhead
-  graph_build_sec    : 0.000005 s
+  graph_build_sec    : 0.000004 s
+
+  *** Negative-weight cycle detected — affected vertices have -inf distances. ***
 
   Vertex     Distance        Path from source
   --------------------------------------------------
@@ -130,13 +138,14 @@ TEST CASE #5
   Source             : 0
 
   Performance
-  rounds             : 2
-  relaxations        : 9
-  early_stop         : True
-  elapsed_sec        : 0.000073 s
+  enqueue_count          : 10
+  total_relaxations      : 9
+  enqueue_ratio          : 1.00
+  max_enqueues           : 1
+  elapsed_sec            : 0.000096 s
 
   Performance Overhead
-  graph_build_sec    : 0.000006 s
+  graph_build_sec    : 0.000009 s
 
   Vertex     Distance        Path from source
   --------------------------------------------------
@@ -162,13 +171,16 @@ TEST CASE #6
   Source             : 0
 
   Performance
-  rounds             : 5
-  relaxations        : 20
-  early_stop         : False
-  elapsed_sec        : 0.000023 s
+  enqueue_count          : 22
+  total_relaxations      : 23
+  enqueue_ratio          : 3.67
+  max_enqueues           : 7
+  elapsed_sec            : 0.000100 s
 
   Performance Overhead
-  graph_build_sec    : 0.000005 s
+  graph_build_sec    : 0.000004 s
+
+  *** Negative-weight cycle detected — affected vertices have -inf distances. ***
 
   Vertex     Distance        Path from source
   --------------------------------------------------

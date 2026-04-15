@@ -1,14 +1,14 @@
 """
-run_all_tests.py
+tests_runner.py
 Runs BFM test cases defined in runner_config.json.
 Data ingestion is handled separately via src/data_ingestion/.
 
 Usage:
-    python src/scripts/run_all_tests.py -a        # run all tests
-    python src/scripts/run_all_tests.py -u        # run unit tests only
-    python src/scripts/run_all_tests.py -r        # run real-world tests only
-    python src/scripts/run_all_tests.py -u -s 2   # run unit test #2 only
-    python src/scripts/run_all_tests.py -r -s 1   # run real-world test #1 only
+    python src/scripts/tests_runner.py -a        # run all tests
+    python src/scripts/tests_runner.py -u        # run unit tests only
+    python src/scripts/tests_runner.py -r        # run real-world tests only
+    python src/scripts/tests_runner.py -u -s 2   # run unit test #2 only
+    python src/scripts/tests_runner.py -r -s 1   # run real-world test #1 only
 """
 
 import argparse
@@ -87,11 +87,11 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 examples:
-  run_all_tests.py -a            run all tests
-  run_all_tests.py -u            run all unit tests
-  run_all_tests.py -r            run all real-world tests
-  run_all_tests.py -u -s 2      run unit test #2 only
-  run_all_tests.py -r -s 1      run real-world test #1 only
+  tests_runner.py -a            run all tests
+  tests_runner.py -u            run all unit tests
+  tests_runner.py -r            run all real-world tests
+  tests_runner.py -u -s 2      run unit test #2 only
+  tests_runner.py -r -s 1      run real-world test #1 only
         """
     )
 

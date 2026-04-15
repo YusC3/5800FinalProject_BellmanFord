@@ -2,7 +2,7 @@
 # Demo / interactive driver
 # ──────────────────────────────────────────────
 
-from bellman_ford_algorithm import bellman_ford_moore, print_results
+from bellman_ford_moore_algorithm import bellman_ford_moore, print_results
 from graph import AdjacencyListGraph, AdjacencyMatrixGraph
 
 

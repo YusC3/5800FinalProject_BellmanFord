@@ -25,6 +25,10 @@ class AdjacencyListGraph:
             for v, w in self.edges[u]:
                 yield u, v, w
 
+    def neighbors(self, u: int) -> list[tuple[int, float]]:
+        """Return list of (v, weight) tuples for all edges out of u."""
+        return self.edges[u]
+    
     def __repr__(self) -> str:
         lines = [f"AdjacencyListGraph ({self.V} vertices)"]
         for u in range(self.V):
@@ -59,6 +63,10 @@ class AdjacencyMatrixGraph:
                 w = self.matrix[u][v]
                 if w is not None:
                     yield u, v, w
+
+    def neighbors(self, u: int) -> list[tuple[int, float]]:
+        """Return list of (v, weight) tuples for all edges out of u."""
+        return [(v, w) for v, w in enumerate(self.matrix[u]) if w is not None]
 
     def __repr__(self) -> str:
         lines = [f"AdjacencyMatrixGraph ({self.V} vertices)"]

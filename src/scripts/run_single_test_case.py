@@ -205,6 +205,10 @@ def _log_results(logger: logging.Logger, dist: list, prev: list,
         logger.info("")
         return
 
+    if any(d == float("-inf") for d in dist):
+        logger.info("  *** Negative-weight cycle detected — affected vertices have -inf distances. ***")
+        logger.info("")
+
     logger.info("  %-10s %-15s %s", "Vertex", "Distance", "Path from source")
     logger.info("  " + "-" * 50)
 

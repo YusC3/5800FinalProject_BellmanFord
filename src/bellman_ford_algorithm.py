@@ -1,5 +1,5 @@
 # ──────────────────────────────────────────────
-# Bellman-Ford-Moore algorithm
+# Bellman-Ford algorithm
 # ──────────────────────────────────────────────
 
 from graph import AdjacencyListGraph, AdjacencyMatrixGraph
@@ -13,7 +13,7 @@ import logging
 # without passing any objects around.
 logger = logging.getLogger("bfm")
 
-# Module-level dict populated after every bellman_ford_moore() call.
+# Module-level dict populated after every bellman_ford() call.
 # run_single_test_case.py reads this immediately after each call to include
 # performance metrics in the log — no extra return values needed.
 last_run: dict = {
@@ -24,12 +24,12 @@ last_run: dict = {
 }
 
 
-def bellman_ford_moore(
+def bellman_ford(
     graph: Union[AdjacencyListGraph, AdjacencyMatrixGraph],
     source: int,
 ) -> tuple[list[float], list[int | None]]:
     """
-    Bellman-Ford-Moore single-source shortest-path algorithm.
+    Bellman-Ford single-source shortest-path algorithm.
 
     Works on directed graphs with positive or negative edge weights.
     Detects negative-weight cycles reachable from the source.
@@ -56,7 +56,7 @@ def bellman_ford_moore(
     after each call so run_single_test_case.py can log them cleanly:
       - rounds      : outer loop iterations completed
       - relaxations : total dist[v] updates performed
-      - early_stop  : True if Moore's optimisation triggered early exit
+      - early_stop  : True if early exit triggered
       - elapsed_sec : wall-clock time covering Steps 2 and 3 only
     """
     V = graph.V
@@ -91,7 +91,7 @@ def bellman_ford_moore(
 
         total_relaxations += round_relaxations
 
-        # Early exit — Moore's optimisation
+        # Early exit
         if not updated:
             early_stop = True
             break
@@ -128,7 +128,7 @@ def reconstruct_path(
 ) -> list[int] | None:
     """
     Reconstruct the shortest path from source to target using the
-    predecessor array returned by bellman_ford_moore.
+    predecessor array returned by bellman_ford.
 
     Returns a list of vertex indices [source, ..., target],
     or None if target is unreachable.

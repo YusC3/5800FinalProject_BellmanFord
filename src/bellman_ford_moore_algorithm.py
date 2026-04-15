@@ -81,26 +81,18 @@ def bellman_ford_moore(
     enqueue_count += 1
     enqueues_per_node[source] += 1
 
-    # Progress tracking — fires every 50K dequeues
-    t_progress    = time.perf_counter()
     dequeue_count = 0
-    INTERVAL      = 50_000
 
     print(f"  Starting BFM on {V:,} vertices ...")
 
-    while queue:
+# `cycle_detected` is true when the queue-based relaxation stage
+    # itself discovers a negative cycle by enqueuing a vertex more than V times.
+    cycle_detected = False
+
+    while queue and not cycle_detected:
         u = queue.popleft()
         in_queue.discard(u)
         dequeue_count += 1
-
-        if dequeue_count % INTERVAL == 0:
-            now     = time.perf_counter()
-            elapsed = now - t_progress
-            t_progress = now
-            rate    = INTERVAL / elapsed if elapsed > 0 else 0
-            print(f"  dequeued {dequeue_count:,} | queue: {len(queue):,} | "
-                  f"relaxations: {total_relaxations:,} | "
-                  f"rate: {rate:,.0f} nodes/sec")
 
         for v, w in graph.neighbors(u):
             new_dist = dist[u] + w
@@ -113,12 +105,20 @@ def bellman_ford_moore(
                     in_queue.add(v)
                     enqueue_count += 1
                     enqueues_per_node[v] += 1
+                    if enqueues_per_node[v] > V:
+                        cycle_detected = True
+                        break
 
-    print(f"  Queue drained after {dequeue_count:,} dequeues "
-          f"(enqueue ratio: {enqueue_count / V:.2f}x)")
+    if cycle_detected:
+        print(f"  Negative-weight cycle detected after {dequeue_count:,} dequeues")
+    else:
+        print(f"  Queue drained after {dequeue_count:,} dequeues "
+              f"(enqueue ratio: {enqueue_count / V:.2f}x)")
 
     # Step 3 – detect and propagate negative-weight cycles using one pass first
-    cycle_found = False
+    # `cycle_found` is true if a negative cycle has been detected either
+    # during queue relaxation or during the subsequent edge scan.
+    cycle_found = cycle_detected
     for u, v, w in graph.iter_edges():
         if dist[u] != math.inf and dist[u] + w < dist[v]:
             dist[v] = -math.inf

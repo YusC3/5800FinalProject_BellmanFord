@@ -1,10 +1,10 @@
 Bellman-Ford-Moore — Batch Results
-Generated   : 2026-04-10 14:52:01
-Input file  : C:\git\5800FinalProject_BellmanFord\tests\unit\easy_instances.txt
+Generated   : 2026-04-15 16:42:57
+Input file  : C:\Users\helen\Desktop\5800FinalProject_BellmanFord\tests\unit\easy_instances.txt
 Test cases  : 6
 
   I/O Overhead (shared across all test cases)
-  io_read_sec        : 0.000349 s
+  io_read_sec        : 0.000139 s
 
 ============================================================
 TEST CASE #1
@@ -17,13 +17,14 @@ TEST CASE #1
   Source             : 0
 
   Performance
-  rounds             : 2
-  relaxations        : 5
-  early_stop         : True
-  elapsed_sec        : 0.000031 s
+  enqueue_count          : 6
+  total_relaxations      : 5
+  enqueue_ratio          : 1.00
+  max_enqueues           : 1
+  elapsed_sec            : 0.000151 s
 
   Performance Overhead
-  graph_build_sec    : 0.000011 s
+  graph_build_sec    : 0.000006 s
 
   Vertex     Distance        Path from source
   --------------------------------------------------
@@ -45,13 +46,14 @@ TEST CASE #2
   Source             : 0
 
   Performance
-  rounds             : 2
-  relaxations        : 5
-  early_stop         : True
-  elapsed_sec        : 0.000013 s
+  enqueue_count          : 6
+  total_relaxations      : 5
+  enqueue_ratio          : 1.00
+  max_enqueues           : 1
+  elapsed_sec            : 0.000112 s
 
   Performance Overhead
-  graph_build_sec    : 0.000006 s
+  graph_build_sec    : 0.000008 s
 
   Vertex     Distance        Path from source
   --------------------------------------------------
@@ -73,13 +75,14 @@ TEST CASE #3
   Source             : 0
 
   Performance
-  rounds             : 2
-  relaxations        : 6
-  early_stop         : True
-  elapsed_sec        : 0.000018 s
+  enqueue_count          : 7
+  total_relaxations      : 6
+  enqueue_ratio          : 1.00
+  max_enqueues           : 1
+  elapsed_sec            : 0.000125 s
 
   Performance Overhead
-  graph_build_sec    : 0.000005 s
+  graph_build_sec    : 0.000004 s
 
   Vertex     Distance        Path from source
   --------------------------------------------------
@@ -102,10 +105,11 @@ TEST CASE #4
   Source             : 0
 
   Performance
-  rounds             : 2
-  relaxations        : 7
-  early_stop         : True
-  elapsed_sec        : 0.000013 s
+  enqueue_count          : 5
+  total_relaxations      : 7
+  enqueue_ratio          : 1.00
+  max_enqueues           : 1
+  elapsed_sec            : 0.000128 s
 
   Performance Overhead
   graph_build_sec    : 0.000004 s
@@ -129,13 +133,14 @@ TEST CASE #5
   Source             : 0
 
   Performance
-  rounds             : 2
-  relaxations        : 4
-  early_stop         : True
-  elapsed_sec        : 0.000021 s
+  enqueue_count          : 5
+  total_relaxations      : 4
+  enqueue_ratio          : 1.00
+  max_enqueues           : 1
+  elapsed_sec            : 0.000118 s
 
   Performance Overhead
-  graph_build_sec    : 0.000007 s
+  graph_build_sec    : 0.000008 s
 
   Vertex     Distance        Path from source
   --------------------------------------------------
@@ -156,10 +161,11 @@ TEST CASE #6
   Source             : 2
 
   Performance
-  rounds             : 2
-  relaxations        : 3
-  early_stop         : True
-  elapsed_sec        : 0.000012 s
+  enqueue_count          : 4
+  total_relaxations      : 3
+  enqueue_ratio          : 0.67
+  max_enqueues           : 1
+  elapsed_sec            : 0.000094 s
 
   Performance Overhead
   graph_build_sec    : 0.000004 s

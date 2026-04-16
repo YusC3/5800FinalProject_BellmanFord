@@ -123,7 +123,7 @@ behavior and confirm scaling matches theoretical bounds.
 
 ### Real-World Datasets (`tests/real_world/`)
 
-Large datasets are not included in this repository. They must be downloaded and
+Large datasets are not included directly in this repository. They must be downloaded and
 converted separately before running real-world tests:
 
 ```bash
@@ -142,6 +142,8 @@ python src/data_ingestion/real_world_data_ingestor.py --skip-download
 
 Raw archives are saved to `tests/real_world/raw/` and can be deleted after
 conversion with no effect on the test files.
+
+> **Important:** If you want to access the log files tracked in LFS in this repo, install [Git LFS](https://git-lfs.com) first, then run `git lfs pull` after cloning.
 
 #### About the datasets
 

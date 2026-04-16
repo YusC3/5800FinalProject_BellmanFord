@@ -5,7 +5,7 @@
 Reads one or more Bellman-Ford-Moore test cases from a plain-text file,
 runs the algorithm on each, and writes a structured log to an output .log file.
 
-The "bfm" logger is initialised here and shared — bellman_ford_algorithm.py
+The "bfm" logger is initialised here and shared — bellman_ford_moore_algorithm.py
 writes performance metrics into the same file via logging.getLogger("bfm").
 
 Log structure per run
@@ -32,7 +32,7 @@ import time
 from datetime import datetime
 from pathlib import Path
 
-from bellman_ford_algorithm import bellman_ford_moore
+from bellman_ford_moore_algorithm import bellman_ford_moore
 from graph import AdjacencyListGraph, AdjacencyMatrixGraph
 
 
@@ -187,10 +187,11 @@ def _log_results(logger: logging.Logger, dist: list, prev: list,
 
     # ── Performance ───────────────────────────────────────────────────────────
     logger.info("  Performance")
-    logger.info("  %-18s : %d",   "rounds",      perf["rounds"])
-    logger.info("  %-18s : %d",   "relaxations", perf["relaxations"])
-    logger.info("  %-18s : %s",   "early_stop",  perf["early_stop"])
-    logger.info("  %-18s : %.6f s", "elapsed_sec", perf["elapsed_sec"])
+    logger.info("  %-22s : %d",     "enqueue_count",     perf["enqueue_count"])
+    logger.info("  %-22s : %d",     "total_relaxations", perf["total_relaxations"])
+    logger.info("  %-22s : %.2f",   "enqueue_ratio",     perf["enqueue_count"] / V)
+    logger.info("  %-22s : %d",     "max_enqueues",      max(perf["enqueues_per_node"]))
+    logger.info("  %-22s : %.6f s", "elapsed_sec",       perf["elapsed_sec"])
     logger.info("")
 
     # ── Performance Overhead ──────────────────────────────────────────────────
@@ -203,6 +204,10 @@ def _log_results(logger: logging.Logger, dist: list, prev: list,
         logger.info("  *** Negative-weight cycle detected — no solution. ***")
         logger.info("")
         return
+
+    if any(d == float("-inf") for d in dist):
+        logger.info("  *** Negative-weight cycle detected — affected vertices have -inf distances. ***")
+        logger.info("")
 
     logger.info("  %-10s %-15s %s", "Vertex", "Distance", "Path from source")
     logger.info("  " + "-" * 50)
@@ -274,10 +279,20 @@ def run_batch(input_path: str | Path, output_path: str | Path) -> Path:
         graph = tc["GraphClass"](tc["V"])
         for u, v, w in tc["edges"]:
             graph.add_edge(u, v, w)
+        # DEBUG PRINT - Verifies no negative weights
+        # neg = [(u, v, w) for u, v, w in graph.iter_edges() if w < 0]
+        # if neg:
+        #     print(f"WARNING: {len(neg)} negative edges — first 5: {neg[:5]}")
+        # else:
+        #     print("No negative weights found.")
+            
         graph_build_sec = time.perf_counter() - t_build_start
+        # DEBUG PRINT - verifies min weight
+        # min_w = min(w for _, _, w in graph.iter_edges())
+        # print(f"Min edge weight: {min_w}")
 
         # Run BFM — performance metrics stored in bellman_ford_algorithm.last_run
-        from bellman_ford_algorithm import last_run
+        from bellman_ford_moore_algorithm import last_run
         dist, prev = bellman_ford_moore(graph, tc["source"])
 
         # Log all sections for this test case
